@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>How to create currency converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="jquery.ripples.js">></script>
+</head>
+
+<body>
+  <div id="ripple-bg"></div>
+  <script>
+    $(document).ready(function () {
+      $('#ripple-bg').ripples('show');
+    });
+  </script>
+  <h3> Currency rates knowledge <h3>
+    
+  <div class="currency-row-outer">
+    <div class="currency-converter">
+      <h2>Currency Converter</h2>
+      
+      <div class="field grid-50-50">
+        <div class="colmun col-left">
+          <input type="number" class="form-input" id="number" placeholder="00000">
+        </div>
+        <div class="colmun col-right">
+          <div class="select">
+            <select name="currency" class="currency" onchange="updatevalue()"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field grid-50-50">
+        <div class="colmun col-left">
+          <input type="text" class="form-input" id="output" placeholder="00000" disabled>
+        </div>
+        <div class="colmun col-right">
+          <div class="select">
+            <select name="currency" class="currency" onchange="updatevalue()"></select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    const select = document.querySelectorAll('.currency');
+    const number = document.getElementById("number");
+    const output = document.getElementById("output");
+
+
+    fetch('https://api.frankfurter.app/currencies').then((data) => data.json())
+      .then((data) => {
+        display(data);
+      });
+
+
+    function display(data) {
+      const entries = Object.entries(data);
+      for (var i = 0; i < entries.length; i++) {
+        select[0].innerHTML += `<option value="${entries[i][0]}">${entries[i][0]} : ${entries[i][1]}</option>`;
+        select[1].innerHTML += `<option value="${entries[i][0]}">${entries[i][0]} : ${entries[i][1]}</option>`;
+      }
+    }
+
+
+
+    function updatevalue() {
+      let currency1 = select[0].value;
+      let currency2 = select[1].value;
+
+      let value = number.value;
+
+
+      if (currency1 != currency2) {
+        convert(currency1, currency2, value);
+      } else {
+        alert("Choose Diffrent Currency");
+      }
+    }
+
+
+    function convert(currency1, currency2, value) {
+      const host = "api.frankfurter.app";
+
+      fetch(`https://${host}/latest?amount=${value}&from=${currency1}&to=${currency2}`)
+        .then((val) => val.json())
+        .then((val) => {
+          console.log(Object.values(val.rates)[0]);
+          output.value = Object.values(val.rates)[0];
+        });
+
+    }
+  </script>
+  
+  <footer class="footer">
+        <div class="start-learning">
+            <div class="footer-start">
+                <div class="texts">
+                    <h2 class="section-title">Get to converter of currencies</h2>
+                    <h3 class="section-sub-heading">
+                        <span>Only</span><strong>Free to use</strong>
+                        <span>just feed values</span> <strong>Get results as you type</strong>
+                        <span>complete😀😆 </span>
+                    </h3>
+                </div>
+                <a href="#" class="button">
+                    <span class="label">Join us</span>
+                </a>
+                <img class="illustration" src="illustration-student.png" alt="illustration" width="120" height="94">
+            </div>
+        </div>
+
+        <div class="inner">
+            <div class="column is-logo">
+                <a href="#" class="main-logo">
+                    <div class="logo">
+                        <img src="logo.png" alt="Currency converter app">
+                    </div>
+                    
+                        <span class="copyright">© 2021. All rights reserved.</span>
+                    </div>
+                </a>
+            </div>
+            <div class="column is-nav">
+                <div class="column-title">Navigation</div>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">Join</a></li>
+                </ul>
+            </div>
+
+            <div class="column is-nav">
+                <div class="column-title">Contact</div>
+                <ul>
+                    <li><a href="#"><i class="fa fa-envelope-open"></i> info@currencyrates.com</a></li>
+                    <li><a href="#"><i class="fa fa-twitter"></i>@Felixonkangi1</a></li>
+                    <li><a href="#"><i class="fa fa-linkedin"></i>Linkedin</a></li>
+                </ul>
+                <div class="column-title">Other</div>
+                <ul>
+                    <li><a href="#">Quiz</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+
+</html>
